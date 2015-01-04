@@ -1,6 +1,6 @@
 ﻿using OpenTK;
 
-namespace OpenTKTutorial4
+namespace OpenTKTutorial5
 {
     public abstract class Volume
     {

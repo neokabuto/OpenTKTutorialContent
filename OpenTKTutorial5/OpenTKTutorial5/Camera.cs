@@ -1,7 +1,7 @@
 ﻿using OpenTK;
 using System;
 
-namespace OpenTKTutorial4
+namespace OpenTKTutorial5
 {
     /// <summary>
     /// A basic camera using Euler angles

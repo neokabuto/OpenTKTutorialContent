@@ -8,7 +8,7 @@ using OpenTK.Input;
 using System.Drawing;
 using System.IO;
 
-namespace OpenTKTutorial4
+namespace OpenTKTutorial5
 {
     class Game : GameWindow
     {

@@ -1,6 +1,6 @@
 ﻿using OpenTK;
 
-namespace OpenTKTutorial4
+namespace OpenTKTutorial5
 {
     /// <summary>
     /// A simple, colorful cube

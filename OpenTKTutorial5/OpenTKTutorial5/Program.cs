@@ -1,5 +1,5 @@
 ﻿
-namespace OpenTKTutorial4
+namespace OpenTKTutorial5
 {
     class Program
     {

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTKTutorial4", "OpenTKTutorial4\OpenTKTutorial4.csproj", "{CE5CD75D-8626-4CD8-83FC-B7A4868DAEC0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTKTutorial5", "OpenTKTutorial5\OpenTKTutorial5.csproj", "{CE5CD75D-8626-4CD8-83FC-B7A4868DAEC0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

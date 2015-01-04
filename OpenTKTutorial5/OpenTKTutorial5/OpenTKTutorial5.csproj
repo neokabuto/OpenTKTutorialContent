@@ -8,8 +8,8 @@
     <ProjectGuid>{CE5CD75D-8626-4CD8-83FC-B7A4868DAEC0}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OpenTKTutorial4</RootNamespace>
-    <AssemblyName>OpenTKTutorial4</AssemblyName>
+    <RootNamespace>OpenTKTutorial5</RootNamespace>
+    <AssemblyName>OpenTKTutorial5</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
