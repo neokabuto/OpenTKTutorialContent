@@ -61,6 +61,18 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <None Include="onecolor.frag">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="onecolor.vert">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="white.frag">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="white.vert">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="sprite.frag">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

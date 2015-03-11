@@ -21,10 +21,12 @@ namespace TKSprites
         private Dictionary<string, int> textures = new Dictionary<string, int>();
         private List<Sprite> sprites = new List<Sprite>();
         private Matrix4 ortho;
-        private ShaderProgram shader;
+        private int currentShader = 0;
+        private List<ShaderProgram> shaders = new List<ShaderProgram>();
         private bool updated = false;
         private float avgfps = 60;
         private Random r = new Random();
+        private bool multishadermode = false;
 
         [STAThread]
         public static void Main()
@@ -61,9 +63,11 @@ namespace TKSprites
                 addSprite();
             }
 
-            // Load shader
-            shader = new ShaderProgram("sprite.vert", "sprite.frag", true);
-            GL.UseProgram(shader.ProgramID);
+            // Load shaders
+            shaders.Add(new ShaderProgram("sprite.vert", "sprite.frag", true)); // Normal sprite
+            shaders.Add(new ShaderProgram("white.vert", "white.frag", true)); // Just draws the whole sprite white
+            shaders.Add(new ShaderProgram("onecolor.vert", "onecolor.frag", true)); // Uses the color in the upper-left corner of the sprite, but with the correct alpha
+            GL.UseProgram(shaders[currentShader].ProgramID);
 
             GL.GenBuffers(1, out ibo_elements);
 
@@ -99,21 +103,27 @@ namespace TKSprites
 
                 int offset = 0;
 
-                shader.EnableVertexAttribArrays();
+                GL.UseProgram(shaders[currentShader].ProgramID);
+                shaders[currentShader].EnableVertexAttribArrays();
                 foreach (Sprite s in sprites)
                 {
                     if (s.IsVisible)
                     {
+                        if (multishadermode)
+                        {
+                            GL.UseProgram(shaders[(s.TextureID - 1) % shaders.Count].ProgramID);
+                        }
+
                         GL.BindTexture(TextureTarget.Texture2D, s.TextureID);
 
-                        GL.UniformMatrix4(shader.GetUniform("mvp"), false, ref s.ModelViewProjectionMatrix);
-                        GL.Uniform1(shader.GetAttribute("mytexture"), s.TextureID);
+                        GL.UniformMatrix4(shaders[currentShader].GetUniform("mvp"), false, ref s.ModelViewProjectionMatrix);
+                        GL.Uniform1(shaders[currentShader].GetAttribute("mytexture"), s.TextureID);
                         GL.DrawElements(BeginMode.Triangles, 6, DrawElementsType.UnsignedInt, offset * sizeof(uint));
                         offset += 6;
                     }
                 }
 
-                shader.DisableVertexAttribArrays();
+                shaders[currentShader].DisableVertexAttribArrays();
 
                 GL.Flush();
                 SwapBuffers();
@@ -199,17 +209,15 @@ namespace TKSprites
             }
 
             // Buffer vertex coordinates
-            GL.BindBuffer(BufferTarget.ArrayBuffer, shader.GetBuffer("v_coord"));
+            GL.BindBuffer(BufferTarget.ArrayBuffer, shaders[currentShader].GetBuffer("v_coord"));
             GL.BufferData<Vector2>(BufferTarget.ArrayBuffer, (IntPtr) (verts.Count * Vector2.SizeInBytes), verts.ToArray(), BufferUsageHint.StaticDraw);
-            GL.VertexAttribPointer(shader.GetAttribute("v_coord"), 2, VertexAttribPointerType.Float, false, 0, 0);
+            GL.VertexAttribPointer(shaders[currentShader].GetAttribute("v_coord"), 2, VertexAttribPointerType.Float, false, 0, 0);
 
             // Buffer texture coords
-            GL.BindBuffer(BufferTarget.ArrayBuffer, shader.GetBuffer("v_texcoord"));
+            GL.BindBuffer(BufferTarget.ArrayBuffer, shaders[currentShader].GetBuffer("v_texcoord"));
             GL.BufferData<Vector2>(BufferTarget.ArrayBuffer, (IntPtr) (texcoords.Count * Vector2.SizeInBytes), texcoords.ToArray(), BufferUsageHint.StaticDraw);
-            GL.VertexAttribPointer(shader.GetAttribute("v_texcoord"), 2, VertexAttribPointerType.Float, true, 0, 0);
-
-            GL.UseProgram(shader.ProgramID);
-
+            GL.VertexAttribPointer(shaders[currentShader].GetAttribute("v_texcoord"), 2, VertexAttribPointerType.Float, true, 0, 0);
+            
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
 
             // Buffer indices
@@ -305,6 +313,25 @@ namespace TKSprites
                 {
                     clickedSprite.TextureID = textures["opentksquare"];
                 }
+            }
+        }
+
+        protected override void OnKeyUp(KeyboardKeyEventArgs e)
+        {
+            base.OnKeyUp(e);
+
+            // Change shader
+            if (e.Key == Key.V && !multishadermode)
+            {
+                currentShader = (currentShader + 1) % shaders.Count;
+                GL.UseProgram(shaders[currentShader].ProgramID);
+            }
+
+            // Enable shader based on texture ID
+            if (e.Key == Key.M)
+            {
+                // Toggle the value
+                multishadermode ^= true;
             }
         }
     }
