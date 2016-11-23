@@ -36,7 +36,7 @@ namespace OpenTKTutorial1
              * The first step is to tell OpenGL we want to draw something. We do this with the GL.Begin function.
              * This takes a single parameter, which is the drawing mode to use.
              * There are options to draw quadrilaterals, triangles, points, polygons, and "strips".*/
-            GL.Begin(BeginMode.Triangles);
+            GL.Begin(PrimitiveType.Triangles);
 
             /* Now that we've told it how we want to draw, we need to give it the vertices for our shape.
              * To do this, we use the GL.Vertex3 function. It takes three floats as coordinates for a single point in 3D space.*/
