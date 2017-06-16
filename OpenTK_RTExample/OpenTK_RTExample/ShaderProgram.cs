@@ -40,7 +40,6 @@ namespace OpenTK_RTExample
             }
 
             Link();
-            GL.UseProgram(ProgramID);
             GenBuffers();
         }
 
@@ -84,10 +83,10 @@ namespace OpenTK_RTExample
         public void Link()
         {
             GL.LinkProgram(ProgramID);
+            GL.UseProgram(ProgramID);
 
             Console.WriteLine(GL.GetProgramInfoLog(ProgramID));
-            
-            
+
             GL.GetProgram(ProgramID, GetProgramParameterName.ActiveAttributes, out AttributeCount);
             GL.GetProgram(ProgramID, GetProgramParameterName.ActiveUniforms, out UniformCount);
 
@@ -103,7 +102,6 @@ namespace OpenTK_RTExample
                 info.name = name.ToString();
                 info.address = GL.GetAttribLocation(ProgramID, info.name);
                 Attributes.Add(name.ToString(), info);
-                //Console.WriteLine(name + " " + info.address);
             }
 
             for (int i = 0; i < UniformCount; i++)
@@ -118,7 +116,6 @@ namespace OpenTK_RTExample
                 info.name = name.ToString();
                 Uniforms.Add(name.ToString(), info);
                 info.address = GL.GetUniformLocation(ProgramID, info.name);
-                //Console.WriteLine(name + " " + info.address);
             }
         }
 

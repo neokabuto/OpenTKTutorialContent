@@ -124,6 +124,15 @@ namespace OpenTK_RTExample
             GL.BindFramebuffer(FramebufferTarget.FramebufferExt, fbo_screen);
             GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.ColorAttachment0Ext, TextureTarget.Texture2D, textures["screen"], 0); // Color info goes into a texture
             GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.DepthAttachmentExt, TextureTarget.Texture2D, textures["screendepth"], 0); // Depth info goes into a texture
+
+            // Check for error
+            FramebufferErrorCode status = GL.CheckFramebufferStatus(FramebufferTarget.FramebufferExt);
+            if (status != FramebufferErrorCode.FramebufferComplete &&
+                status != FramebufferErrorCode.FramebufferCompleteExt)
+            {
+                Console.WriteLine("Error creating framebuffer: {0}", status);
+            }
+
         }
 
         private void initScene()
@@ -189,6 +198,7 @@ namespace OpenTK_RTExample
         private void loadResources()
         {
             // Create shaders
+            shaders.Add("default", new ShaderProgram("vs.glsl", "fs.glsl", true));
             shaders.Add("lit_advanced", new ShaderProgram("vs_lit.glsl", "fs_lit_advanced.glsl", true));
             shaders.Add("screen", new ShaderProgram("vs_lit.glsl", "fs_lit_advanced_screen.glsl", true));
 
