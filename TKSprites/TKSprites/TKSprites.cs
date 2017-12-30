@@ -114,10 +114,15 @@ namespace TKSprites
                             GL.UseProgram(shaders[(s.TextureID - 1) % shaders.Count].ProgramID);
                         }
 
+                        // Set texture
+                        GL.ActiveTexture(TextureUnit.Texture0);
                         GL.BindTexture(TextureTarget.Texture2D, s.TextureID);
 
                         GL.UniformMatrix4(shaders[currentShader].GetUniform("mvp"), false, ref s.ModelViewProjectionMatrix);
-                        GL.Uniform1(shaders[currentShader].GetAttribute("mytexture"), s.TextureID);
+
+                        // Needs texture unit, not texture ID
+                        GL.Uniform1(shaders[currentShader].GetUniform("mytexture"), 0);
+
                         GL.DrawElements(BeginMode.Triangles, 6, DrawElementsType.UnsignedInt, offset * sizeof(uint));
                         offset += 6;
                     }
