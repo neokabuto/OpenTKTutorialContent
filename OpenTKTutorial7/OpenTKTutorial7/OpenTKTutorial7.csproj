@@ -63,9 +63,6 @@
     <Compile Include="Volume.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="cow.obj">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="fs.glsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
