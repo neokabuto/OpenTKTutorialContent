@@ -61,7 +61,7 @@ namespace OpenTKTutorial7
             objects.Add(tc2);
 
             // OBJ models from files
-            ObjVolume obj1 = ObjVolume.LoadFromFile("cow.obj");
+            ObjVolume obj1 = ObjVolume.LoadFromFile("teapot.obj");
             obj1.TextureID = textures["opentksquare.png"];            
             objects.Add(obj1);
 
@@ -99,12 +99,13 @@ namespace OpenTKTutorial7
             // Draw all our objects
             foreach (Volume v in objects)
             {
+                GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.Texture2D, v.TextureID);
                 GL.UniformMatrix4(shaders[activeShader].GetUniform("modelview"), false, ref v.ModelViewProjectionMatrix);
 
-                if (shaders[activeShader].GetAttribute("maintexture") != -1)
+                if (shaders[activeShader].GetUniform("maintexture") != -1)
                 {
-                    GL.Uniform1(shaders[activeShader].GetAttribute("maintexture"), v.TextureID);
+                    GL.Uniform1(shaders[activeShader].GetUniform("maintexture"), 0);
                 }
 
                 GL.DrawElements(BeginMode.Triangles, v.IndiceCount, DrawElementsType.UnsignedInt, indiceat * sizeof(uint));

@@ -7,7 +7,6 @@ using System.Linq;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
-using OpenTK.Input;
 
 namespace OpenTKTutorial8
 {
@@ -37,7 +36,6 @@ namespace OpenTKTutorial8
 
         Dictionary<string, ShaderProgram> shaders = new Dictionary<string, ShaderProgram>();
         string activeShader = "default";
-
         
         float time = 0.0f;
 
@@ -97,12 +95,13 @@ namespace OpenTKTutorial8
             // Draw all our objects
             foreach (Volume v in objects)
             {
+                GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.Texture2D, v.TextureID);
                 GL.UniformMatrix4(shaders[activeShader].GetUniform("modelview"), false, ref v.ModelViewProjectionMatrix);
 
-                if (shaders[activeShader].GetAttribute("maintexture") != -1)
+                if (shaders[activeShader].GetUniform("maintexture") != -1)
                 {
-                    GL.Uniform1(shaders[activeShader].GetAttribute("maintexture"), v.TextureID);
+                    GL.Uniform1(shaders[activeShader].GetUniform("maintexture"), 0);
                 }
 
                 GL.DrawElements(BeginMode.Triangles, v.IndiceCount, DrawElementsType.UnsignedInt, indiceat * sizeof(uint));
@@ -269,7 +268,7 @@ namespace OpenTKTutorial8
             int texID = GL.GenTexture();
 
             GL.BindTexture(TextureTarget.Texture2D, texID);
-            BitmapData data = image.LockBits(new System.Drawing.Rectangle(0, 0, image.Width, image.Height),
+            BitmapData data = image.LockBits(new Rectangle(0, 0, image.Width, image.Height),
                 ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, data.Width, data.Height, 0,
