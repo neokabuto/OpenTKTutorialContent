@@ -43,6 +43,7 @@ namespace OpenTKTutorial8
         void initProgram()
         {
             lastMousePos = new Vector2(Mouse.X, Mouse.Y);
+            CursorVisible = false;
 
             GL.GenBuffers(1, out ibo_elements);
 
@@ -72,6 +73,8 @@ namespace OpenTKTutorial8
 
             // Move camera away from origin
             cam.Position += new Vector3(0f, 0f, 3f);
+
+            cam.MouseSensitivity = 0.0025f;
 
             textures.Add("earth.png", loadImage("earth.png"));
             ObjVolume earth = ObjVolume.LoadFromFile("earth.obj");
@@ -313,7 +316,7 @@ namespace OpenTKTutorial8
                 lastMousePos += delta;
 
                 cam.AddRotation(delta.X, delta.Y);
-                ResetCursor();
+                lastMousePos = new Vector2(OpenTK.Input.Mouse.GetState().X, OpenTK.Input.Mouse.GetState().Y);
             }
 
             view = cam.GetViewMatrix();
@@ -351,22 +354,13 @@ namespace OpenTKTutorial8
             }
         }
 
-        /// <summary>
-        /// Moves the mouse cursor to the center of the screen
-        /// </summary>
-        void ResetCursor()
-        {
-            OpenTK.Input.Mouse.SetPosition(Bounds.Left + Bounds.Width / 2, Bounds.Top + Bounds.Height / 2);
-            lastMousePos = new Vector2(OpenTK.Input.Mouse.GetState().X, OpenTK.Input.Mouse.GetState().Y);
-        }
-
         protected override void OnFocusedChanged(EventArgs e)
         {
             base.OnFocusedChanged(e);
 
             if (Focused)
             {
-                ResetCursor();
+                lastMousePos = new Vector2(OpenTK.Input.Mouse.GetState().X, OpenTK.Input.Mouse.GetState().Y);
             }
         }
 
