@@ -83,6 +83,8 @@ namespace OpenTK_RTExample
             GL.Enable(EnableCap.Multisample);
 
             lastMousePos = new Vector2(Mouse.X, Mouse.Y);
+            CursorVisible = false;
+            mainCamera.MouseSensitivity = 0.0025f;
 
             GL.GenBuffers(1, out ibo_elements);
 
@@ -258,6 +260,9 @@ namespace OpenTK_RTExample
         /// <param name="camera">Camera the video is from the perspective of</param>
         private void RenderScene(Camera camera)
         {
+            if (!resourcesLoaded || time < float.Epsilon)
+                return;
+
             GL.UseProgram(shaders[activeShader].ProgramID);
 
             int indiceat = 0;
@@ -458,6 +463,8 @@ namespace OpenTK_RTExample
             if (!resourcesLoaded)
                 return;
 
+            ProcessInput();
+
             List<Vector3> verts = new List<Vector3>();
             List<int> inds = new List<int>();
             List<Vector3> colors = new List<Vector3>();
@@ -529,23 +536,83 @@ namespace OpenTK_RTExample
             }
 
             view = mainCamera.GetViewMatrix();
-            
-            // Mouse movement
+        }
+
+        /// <summary>
+        /// Handles keyboard and mouse input
+        /// </summary>
+        private void ProcessInput()
+        {
+            /* We'll use the escape key to make the program easy to exit from.
+             * Otherwise it's annoying since the mouse cursor is trapped inside.*/
+            if (Keyboard.GetState().IsKeyDown(Key.Escape))
+            {
+                Exit();
+            }
+
+            /** Let's start by adding WASD input (feel free to change the keys if you want,
+             * hopefully a later tutorial will have a proper input manager) for translating the camera. */
+            if (Keyboard.GetState().IsKeyDown(Key.W))
+            {
+                mainCamera.Move(0f, 0.1f, 0f);
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Key.S))
+            {
+                mainCamera.Move(0f, -0.1f, 0f);
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Key.A))
+            {
+                mainCamera.Move(-0.1f, 0f, 0f);
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Key.D))
+            {
+                mainCamera.Move(0.1f, 0f, 0f);
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Key.Q))
+            {
+                mainCamera.Move(0f, 0f, 0.1f);
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Key.E))
+            {
+                mainCamera.Move(0f, 0f, -0.1f);
+            }
+
+            // Move screen camera
+            if (Keyboard.GetState().IsKeyDown(Key.U))
+            {
+                screenCamera.Move(0f, 0f, 0.1f);
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Key.J))
+            {
+                screenCamera.Move(0f, 0f, -0.1f);
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Key.H))
+            {
+                screenCamera.Move(-0.1f, 0f, 0f);
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Key.K))
+            {
+                screenCamera.Move(0.1f, 0f, 0f);
+            }
+
             if (Focused)
             {
                 Vector2 delta = lastMousePos - new Vector2(OpenTK.Input.Mouse.GetState().X, OpenTK.Input.Mouse.GetState().Y);
                 lastMousePos += delta;
 
                 mainCamera.AddRotation(delta.X, delta.Y);
-                ResetCursor();
-
-                if (Keyboard[Key.Escape])
-                {
-                    Exit();
-                }
+                lastMousePos = new Vector2(OpenTK.Input.Mouse.GetState().X, OpenTK.Input.Mouse.GetState().Y);
             }
-            
         }
+
 
         protected override void OnKeyPress(KeyPressEventArgs e)
         {
@@ -553,38 +620,6 @@ namespace OpenTK_RTExample
 
             switch (e.KeyChar)
             {
-                // Move main camera
-                case 'w':
-                    mainCamera.Move(0f, 0.1f, 0f);
-                    break;
-                case 'a':
-                    mainCamera.Move(-0.1f, 0f, 0f);
-                    break;
-                case 's':
-                    mainCamera.Move(0f, -0.1f, 0f);
-                    break;
-                case 'd':
-                    mainCamera.Move(0.1f, 0f, 0f);
-                    break;
-                case 'q':
-                    mainCamera.Move(0f, 0f, 0.1f);
-                    break;
-                case 'e':
-                    mainCamera.Move(0f, 0f, -0.1f);
-                    break;
-                // Move screen camera
-                case 'u':
-                    screenCamera.Move(0f, 0f, 0.1f);
-                    break;
-                case 'j':
-                    screenCamera.Move(0f, 0f, -0.1f);
-                    break;
-                case 'h':
-                    screenCamera.Move(-0.1f, 0f, 0f);
-                    break;
-                case 'k':
-                    screenCamera.Move(0.1f, 0f, 0f);
-                    break;
                 // Change shader of screen
                 case 'v':
                     tvScreen.Shader = (tvScreen.Shader == "screen") ? "lit_advanced" : "screen";
@@ -596,23 +631,10 @@ namespace OpenTK_RTExample
             }
         }
 
-        /// <summary>
-        /// Moves the cursor to the center of the window
-        /// </summary>
-        void ResetCursor()
-        {
-            OpenTK.Input.Mouse.SetPosition(Bounds.Left + Bounds.Width / 2, Bounds.Top + Bounds.Height / 2);
-            lastMousePos = new Vector2(OpenTK.Input.Mouse.GetState().X, OpenTK.Input.Mouse.GetState().Y);
-        }
-
         protected override void OnFocusedChanged(EventArgs e)
         {
             base.OnFocusedChanged(e);
-
-            if (Focused)
-            {
-                ResetCursor();
-            }
+            lastMousePos = new Vector2(OpenTK.Input.Mouse.GetState().X, OpenTK.Input.Mouse.GetState().Y);
         }
 
         /// <summary>
