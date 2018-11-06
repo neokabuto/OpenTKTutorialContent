@@ -37,6 +37,8 @@ namespace OpenTKTutorial7
         void initProgram()
         {
             lastMousePos = new Vector2(Mouse.X, Mouse.Y);
+            CursorVisible = false;
+            cam.MouseSensitivity = 0.0025f;
 
             GL.GenBuffers(1, out ibo_elements);
 
@@ -121,6 +123,8 @@ namespace OpenTKTutorial7
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
             base.OnUpdateFrame(e);
+            
+            ProcessInput();
 
             List<Vector3> verts = new List<Vector3>();
             List<int> inds = new List<int>();
@@ -191,67 +195,65 @@ namespace OpenTKTutorial7
             // Buffer index data
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, ibo_elements);
             GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(indicedata.Length * sizeof(int)), indicedata, BufferUsageHint.StaticDraw);
+        }
 
+        protected override void OnFocusedChanged(EventArgs e)
+        {
+            base.OnFocusedChanged(e);
+            lastMousePos = new Vector2(OpenTK.Input.Mouse.GetState().X, OpenTK.Input.Mouse.GetState().Y);
+        }
 
-            // Reset mouse position
+        /// <summary>
+        /// Handles keyboard and mouse input
+        /// </summary>
+        private void ProcessInput()
+        {
+            /* We'll use the escape key to make the program easy to exit from.
+             * Otherwise it's annoying since the mouse cursor is trapped inside.*/
+            if (Keyboard.GetState().IsKeyDown(Key.Escape))
+            {
+                Exit();
+            }
+
+            /** Let's start by adding WASD input (feel free to change the keys if you want,
+             * hopefully a later tutorial will have a proper input manager) for translating the camera. */
+            if (Keyboard.GetState().IsKeyDown(Key.W))
+            {
+                cam.Move(0f, 0.1f, 0f);
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Key.S))
+            {
+                cam.Move(0f, -0.1f, 0f);
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Key.A))
+            {
+                cam.Move(-0.1f, 0f, 0f);
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Key.D))
+            {
+                cam.Move(0.1f, 0f, 0f);
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Key.Q))
+            {
+                cam.Move(0f, 0f, 0.1f);
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Key.E))
+            {
+                cam.Move(0f, 0f, -0.1f);
+            }
+
             if (Focused)
             {
                 Vector2 delta = lastMousePos - new Vector2(OpenTK.Input.Mouse.GetState().X, OpenTK.Input.Mouse.GetState().Y);
                 lastMousePos += delta;
 
                 cam.AddRotation(delta.X, delta.Y);
-                ResetCursor();
-            }
-        }
-
-        protected override void OnKeyPress(KeyPressEventArgs e)
-        {
-            base.OnKeyPress(e);
-
-            if (e.KeyChar == 27)
-            {
-                Exit();
-            }
-
-            switch (e.KeyChar)
-            {
-                case 'w':
-                    cam.Move(0f, 0.1f, 0f);
-                    break;
-                case 'a':
-                    cam.Move(-0.1f, 0f, 0f);
-                    break;
-                case 's':
-                    cam.Move(0f, -0.1f, 0f);
-                    break;
-                case 'd':
-                    cam.Move(0.1f, 0f, 0f);
-                    break;
-                case 'q':
-                    cam.Move(0f, 0f, 0.1f);
-                    break;
-                case 'e':
-                    cam.Move(0f, 0f, -0.1f);
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// Moves the mouse cursor to the center of the screen
-        /// </summary>
-        void ResetCursor()
-        {
-            OpenTK.Input.Mouse.SetPosition(Bounds.Left + Bounds.Width / 2, Bounds.Top + Bounds.Height / 2);
-            lastMousePos = new Vector2(OpenTK.Input.Mouse.GetState().X, OpenTK.Input.Mouse.GetState().Y);
-        }
-
-        protected override void OnFocusedChanged(EventArgs e)
-        {
-            base.OnFocusedChanged(e);
-
-            if (Focused)
-            {
-                ResetCursor();
+                lastMousePos = new Vector2(OpenTK.Input.Mouse.GetState().X, OpenTK.Input.Mouse.GetState().Y);
             }
         }
 
@@ -280,7 +282,7 @@ namespace OpenTKTutorial7
                 Bitmap file = new Bitmap(filename);
                 return loadImage(file);
             }
-            catch (FileNotFoundException e)
+            catch (FileNotFoundException)
             {
                 return -1;
             }
