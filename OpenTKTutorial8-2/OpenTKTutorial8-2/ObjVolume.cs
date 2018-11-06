@@ -138,7 +138,7 @@ namespace OpenTKTutorial8
                     obj = LoadFromString(reader.ReadToEnd());
                 }
             }
-            catch (FileNotFoundException e)
+            catch (FileNotFoundException)
             {
                 Console.WriteLine("File not found: {0}", filename);
             }
