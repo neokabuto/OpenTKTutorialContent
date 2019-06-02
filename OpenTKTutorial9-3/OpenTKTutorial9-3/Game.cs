@@ -43,7 +43,7 @@ namespace OpenTKTutorial9
 
         void initProgram()
         {
-            lastMousePos = new Vector2(Mouse.X, Mouse.Y);
+            lastMousePos = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
             CursorVisible = false;
             cam.MouseSensitivity = 0.0025f;
 
@@ -361,11 +361,11 @@ namespace OpenTKTutorial9
                 vertcount += v.VertCount;
             }
 
-            vertdata = verts.ToArray();
-            indicedata = inds.ToArray();
-            coldata = colors.ToArray();
-            texcoorddata = texcoords.ToArray();
-            normdata = normals.ToArray();
+            vertdata = (Vector3[])verts.ToArray().Clone();
+            indicedata = (int[])inds.ToArray().Clone();
+            coldata = (Vector3[])colors.ToArray().Clone();
+            texcoorddata = (Vector2[])texcoords.ToArray().Clone();
+            normdata = (Vector3[])normals.ToArray().Clone();
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, shaders[activeShader].GetBuffer("vPosition"));
 
@@ -513,7 +513,7 @@ namespace OpenTKTutorial9
                 Bitmap file = new Bitmap(filename);
                 return loadImage(file);
             }
-            catch (FileNotFoundException e)
+            catch (FileNotFoundException)
             {
                 return -1;
             }
