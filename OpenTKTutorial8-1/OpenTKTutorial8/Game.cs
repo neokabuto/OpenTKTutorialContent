@@ -42,7 +42,7 @@ namespace OpenTKTutorial8
 
         void initProgram()
         {
-            lastMousePos = new Vector2(Mouse.X, Mouse.Y);
+            lastMousePos = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
             CursorVisible = false;
             cam.MouseSensitivity = 0.0025f;
 
@@ -90,6 +90,12 @@ namespace OpenTKTutorial8
             GL.Viewport(0, 0, Width, Height);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.Enable(EnableCap.DepthTest);
+
+            // Prevent rendering with no data
+            if (vertdata == null)
+            {
+                return;
+            }
 
             shaders[activeShader].EnableVertexAttribArrays();
 
