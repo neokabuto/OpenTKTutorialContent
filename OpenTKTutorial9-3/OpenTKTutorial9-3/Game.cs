@@ -194,6 +194,12 @@ namespace OpenTKTutorial9
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.Enable(EnableCap.DepthTest);
 
+            // Prevent rendering with no data
+            if (vertdata == null)
+            {
+                return;
+            }
+
             GL.UseProgram(shaders[activeShader].ProgramID);
             shaders[activeShader].EnableVertexAttribArrays();
 
