@@ -82,7 +82,7 @@ namespace OpenTK_RTExample
         {
             GL.Enable(EnableCap.Multisample);
 
-            lastMousePos = new Vector2(Mouse.X, Mouse.Y);
+            lastMousePos = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
             CursorVisible = false;
             mainCamera.MouseSensitivity = 0.0025f;
 
@@ -232,7 +232,7 @@ namespace OpenTK_RTExample
         
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            if (!resourcesLoaded)
+            if (!resourcesLoaded || vertdata == null)
                 return;
 
             base.OnRenderFrame(e);
