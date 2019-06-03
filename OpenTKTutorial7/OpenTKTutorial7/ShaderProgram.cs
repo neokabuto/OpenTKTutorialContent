@@ -74,9 +74,9 @@ namespace OpenTKTutorial7
                 AttributeInfo info = new AttributeInfo();
                 int length = 0;
 
-                StringBuilder name = new StringBuilder();
+                String name;
 
-                GL.GetActiveAttrib(ProgramID, i, 256, out length, out info.size, out info.type, name);
+                GL.GetActiveAttrib(ProgramID, i, 256, out length, out info.size, out info.type, out name);
 
                 info.name = name.ToString();
                 info.address = GL.GetAttribLocation(ProgramID, info.name);
@@ -88,9 +88,9 @@ namespace OpenTKTutorial7
                 UniformInfo info = new UniformInfo();
                 int length = 0;
 
-                StringBuilder name = new StringBuilder();
+                String name;
 
-                GL.GetActiveUniform(ProgramID, i, 256, out length, out info.size, out info.type, name);
+                GL.GetActiveUniform(ProgramID, i, 256, out length, out info.size, out info.type, out name);
 
                 info.name = name.ToString();
                 Uniforms.Add(name.ToString(), info);
