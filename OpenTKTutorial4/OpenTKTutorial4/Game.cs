@@ -175,6 +175,12 @@ namespace OpenTKTutorial4
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.Enable(EnableCap.DepthTest);
 
+            // Prevent rendering with no data
+            if (vertdata == null)
+            {
+                return;
+            }
+
             GL.EnableVertexAttribArray(attribute_vpos);
             GL.EnableVertexAttribArray(attribute_vcol);
 
