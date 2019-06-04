@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -120,6 +121,9 @@ namespace OpenTKTutorial8
             List<Vector2> texs = new List<Vector2>();
             List<Tuple<TempVertex, TempVertex, TempVertex>> faces = new List<Tuple<TempVertex, TempVertex, TempVertex>>();
 
+            CultureInfo ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+            ci.NumberFormat.CurrencyDecimalSeparator = ".";
+
             // Base values
             verts.Add(new Vector3());
             texs.Add(new Vector2());
@@ -140,10 +144,10 @@ namespace OpenTKTutorial8
                     {
                         String[] vertparts = temp.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-                        // Attempt to parse each part of the vertice
-                        bool success = float.TryParse(vertparts[0], out vec.X);
-                        success |= float.TryParse(vertparts[1], out vec.Y);
-                        success |= float.TryParse(vertparts[2], out vec.Z);
+                        // Attempt to parse each part of the vertex
+                        bool success = float.TryParse(vertparts[0], NumberStyles.Any, ci, out vec.X);
+                        success |= float.TryParse(vertparts[1], NumberStyles.Any, ci, out vec.Y);
+                        success |= float.TryParse(vertparts[2], NumberStyles.Any, ci, out vec.Z);
 
                         // If any of the parses failed, report the error
                         if (!success)
@@ -169,9 +173,9 @@ namespace OpenTKTutorial8
                     {
                         String[] texcoordparts = temp.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-                        // Attempt to parse each part of the vertice
-                        bool success = float.TryParse(texcoordparts[0], out vec.X);
-                        success |= float.TryParse(texcoordparts[1], out vec.Y);
+                        // Attempt to parse each part of the vertex
+                        bool success = float.TryParse(texcoordparts[0], NumberStyles.Any, ci, out vec.X);
+                        success |= float.TryParse(texcoordparts[1], NumberStyles.Any, ci, out vec.Y);
 
                         // If any of the parses failed, report the error
                         if (!success)
