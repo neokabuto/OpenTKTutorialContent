@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -112,6 +113,10 @@ namespace OpenTKTutorial7
             List<Vector2> texs = new List<Vector2>();
             List<Tuple<int, int, int>> faces = new List<Tuple<int, int, int>>();
 
+            // This allows users in any locale to read the files
+            CultureInfo ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+            ci.NumberFormat.CurrencyDecimalSeparator = ".";
+
             // Read file line by line
             foreach (String line in lines)
             {
@@ -127,9 +132,9 @@ namespace OpenTKTutorial7
                         String[] vertparts = temp.Split(' ');
 
                         // Attempt to parse each part of the vertice
-                        bool success = float.TryParse(vertparts[0], out vec.X);
-                        success |= float.TryParse(vertparts[1], out vec.Y);
-                        success |= float.TryParse(vertparts[2], out vec.Z);
+                        bool success = float.TryParse(vertparts[0], NumberStyles.Any, ci, out vec.X);
+                        success |= float.TryParse(vertparts[1], NumberStyles.Any, ci, out vec.Y);
+                        success |= float.TryParse(vertparts[2], NumberStyles.Any, ci, out vec.Z);
 
                         // Dummy color/texture coordinates for now
                         colors.Add(new Vector3((float) Math.Sin(vec.Z), (float) Math.Sin(vec.Z), (float) Math.Sin(vec.Z)));
